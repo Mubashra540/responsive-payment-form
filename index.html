@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📟Payment Form</title>
+    <link rel="stylesheet" href="acCSSL5a.css" />
+  </head>
+  <body>
+    <form id="paymentform" action="#" method="post">
+      <h1>Payment Form</h1>
+      <hr />
+      <h2>User Information</h2>
+      <p>
+        Name:*
+        <input type="text" id="gname" placeholder="Makkea Sallar" required />
+      </p>
+      <fieldset>
+        <legend>Gender:*</legend>
+        <div class="radio-group">
+          <label for="male">
+            <input type="radio" id="male" name="gender" required />Male
+          </label>
+          <label for="female">
+            <input type="radio" id="female" name="gender" required />Female
+          </label>
+        </div>
+      </fieldset>
+      <p>
+        Address:*
+        <textarea
+          name="address"
+          id="paddress"
+          placeholder="Enter Your Address..."
+          required
+        ></textarea>
+      </p>
+      <p>
+        Email:*
+        <input type="email" id="email" placeholder="ali@gmail.com" required />
+      </p>
+      <p>
+        PinCode:*
+        <input
+          type="text"
+          id="pincode"
+          minlength="8"
+          maxlength="8"
+          placeholder="12345678"
+          required
+        />
+        <span class="pin-error" id="pinerror"
+          >Pincode must be of 8 digits.</span
+        >
+        <span
+          class="pin valid"
+          id="pin-valid"
+          style="color: green; display: none"
+          >✅</span
+        >
+        <span
+          class="pin invalid"
+          id="pin-invalid"
+          style="color: red; display: none"
+          >❌</span
+        >
+      </p>
+      <h2>Payment Information</h2>
+      <p>
+        Card Type:*
+        <select name="cardname" id="cardtype" required>
+          <option value="atm">ATM CARD</option>
+          <option value="debit">DEBIT CARD</option>
+          <option value="credit">CREDIT CARD</option>
+        </select>
+      </p>
+      <p>
+        Card Number:*
+        <input
+          type="text"
+          id="cardnumber"
+          minlength="16"
+          maxlength="16"
+          placeholder="1111222233334444"
+          required
+        />
+        <span class="card-error" id="carderror"
+          >Card Number must be of 16 digits.</span
+        >
+        <span
+          class="card valid"
+          id="card-valid"
+          style="color: green; display: none"
+          >✅</span
+        >
+        <span
+          class="card invalid"
+          id="card-invalid"
+          style="color: red; display: none"
+          >❌</span
+        >
+      </p>
+      <p>
+        Expiration date:*
+        <input
+          type="date"
+          id="expirydate"
+          required
+          onkeydown="return false"
+          onpaste="return false"
+          ondrop="return false"
+        />
+      </p>
+      <p>
+        CVV:*
+        <input type="password" id="cvv" required />
+        <label>
+          <input
+            type="checkbox"
+            onclick="cvvInput.type = cvvInput.type === 'password' ? 'text' : 'password'"
+          />Show CVV</label
+        >
+        <span class="cvv-error" id="cvverror"
+          >Your cvv must contains at leat one uppercase,lowercase,numeric and
+          special symbol,and must be of at least 8 characters.</span
+        >
+        <span
+          class="cvv valid"
+          id="cvv-valid"
+          style="color: green; display: none"
+          >✅</span
+        >
+        <span
+          class="cvv invalid"
+          id="cvv-invalid"
+          style="color: red; display: none"
+          >❌</span
+        >
+      </p>
+      <!-- <button type="submit" id="submit">Pay Now</button> -->
+      <input type="submit" value="Pay Now" id="submit" />
+    </form>
+
+    <script>
+      const form = document.getElementById("paymentform");
+      const pinInput = document.getElementById("pincode");
+      const pinError = document.getElementById("pinerror");
+      const cardInput = document.getElementById("cardnumber");
+      const cardError = document.getElementById("carderror");
+      const cvvInput = document.getElementById("cvv");
+      const cvvError = document.getElementById("cvverror");
+      const expiryDate = document.getElementById("expirydate");
+      const cardValid = document.getElementById("card-valid");
+      const cardInvalid = document.getElementById("card-invalid");
+      const pinValid = document.getElementById("pin-valid");
+      const pinInvalid = document.getElementById("pin-invalid");
+      const cvvValid = document.getElementById("cvv-valid");
+      const cvvInvalid = document.getElementById("cvv-invalid");
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const minDate = `${yyyy}-${mm}-${dd}`;
+      expiryDate.min = minDate;
+      pinInput.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, "");
+        if (/^\d{8}$/.test(this.value)) {
+          pinError.style.display = "none";
+          pinValid.style.display = "inline";
+          pinInvalid.style.display = "none";
+        } else {
+          pinValid.style.display = "none";
+          pinInvalid.style.display = "inline";
+        }
+      });
+      cardInput.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, "");
+        if (/^\d{16}$/.test(this.value)) {
+          cardError.style.display = "none";
+          cardValid.style.display = "inline";
+          cardInvalid.style.display = "none";
+        } else {
+          cardValid.style.display = "none";
+          cardInvalid.style.display = "inline";
+        }
+      });
+      cvvInput.addEventListener("input", function () {
+        const cvvppattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[~\`@#$%^&*()\-_\\=+|\[\]{}'\";:.<>\/])(?=.*[\d]).{8,}$/;
+        if (cvvppattern.test(cvvInput.value.trim())) {
+          cvvError.style.display = "none";
+          cvvValid.style.display = "inline";
+          cvvInvalid.style.display = "none";
+        } else {
+          cvvValid.style.display = "none";
+          cvvInvalid.style.display = "inline";
+        }
+      });
+      form.addEventListener("submit", function (e) {
+        let isValid = true;
+        const pinValue = pinInput.value.trim();
+        if (/^\d{8}$/.test(pinValue)) {
+          pinError.style.display = "none";
+        } else {
+          pinError.style.display = "block";
+          isValid = false;
+        }
+        const cardValue = cardInput.value.trim();
+        if (/^\d{16}$/.test(cardValue)) {
+          cardError.style.display = "none";
+        } else {
+          cardError.style.display = "block";
+          isValid = false;
+        }
+        const cvvPassword = cvvInput.value.trim();
+        const cvvPattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+\-=\[\]{};:'"/.<>\/\\`])(?=.*[\d]).{8,}/;
+        if (cvvPattern.test(cvvPassword)) {
+          cvvError.style.display = "none";
+        } else {
+          cvvError.style.display = "block";
+          isValid = false;
+        }
+        if (!isValid) {
+          e.preventDefault();
+        } else {
+          e.preventDefault();
+          form.style.display = "none";
+          const successMsg = document.createElement("div");
+          successMsg.innerHTML = `<h2 style="text-align: center; color: green;">🎉Payment Successfully Done.</h2>
+    <p style="text-align: center; font-size: 20px;">You can pay another payment below.</p>
+    <button id = "payagainbutton" style="background-color: #8d7bac; color: white; font-size: 20px; border: none; cursor: pointer; border-radius: 6px; margin: 20px auto; padding: 10px 20px; display: block;">Pay Again</button>`;
+          document.body.appendChild(successMsg);
+          document
+            .getElementById("payagainbutton")
+            .addEventListener("click", () => {
+              form.reset();
+              form.style.display = "block";
+              successMsg.remove();
+            });
+        }
+      });
+    </script>
+  </body>
+</html>
